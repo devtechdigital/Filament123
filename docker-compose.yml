@@ -1,0 +1,9 @@
+services:
+  filament-home:
+    build: .
+    container_name: filament-home
+    ports:
+      - "3005:3000"
+    env_file:
+      - .env.local
+    restart: unless-stopped

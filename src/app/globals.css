@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #e3efe5;
+  --panel: #f7faf8;
+  --brand: #166534;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 15% 10%, #d4e9d7 0%, transparent 35%),
+    radial-gradient(circle at 85% 15%, #dceee0 0%, transparent 30%),
+    var(--bg);
+  color: #111827;
+  font-family: "ui-sans-serif", "system-ui", "Segoe UI", sans-serif;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
