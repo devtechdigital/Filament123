@@ -51,15 +51,15 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="mx-auto max-w-sm rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
-      <h1 className="text-xl font-bold">Sign in</h1>
-      <p className="mb-4 text-sm text-zinc-600">Email verification code via Convex Auth.</p>
+    <div className="mx-auto max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--panel-elevated)] p-5 shadow-xl shadow-black/30">
+      <h1 className="text-page-title text-[var(--text)]">Sign in</h1>
+      <p className="mb-4 text-body text-[var(--text-muted)]">Email verification code via Convex Auth.</p>
 
       <form className="space-y-3" onSubmit={awaitingCode ? onVerifyCode : onRequestCode}>
-        <label className="block text-sm font-medium">
+        <label className="block text-body font-medium text-[var(--text)]">
           Email
           <input
-            className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-[var(--text)]"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -68,10 +68,10 @@ export default function SignInPage() {
         </label>
 
         {awaitingCode ? (
-          <label className="block text-sm font-medium">
+          <label className="block text-body font-medium text-[var(--text)]">
             Verification code
             <input
-              className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-[var(--text)]"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               required
@@ -79,10 +79,10 @@ export default function SignInPage() {
           </label>
         ) : null}
 
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {error ? <p className="text-body text-red-400">{error}</p> : null}
 
         <button
-          className="w-full rounded-lg bg-[var(--brand)] px-3 py-2 font-semibold text-white disabled:opacity-60"
+          className="w-full rounded-lg bg-[var(--brand)] px-3 py-2 text-button text-white shadow-md transition-colors hover:bg-[var(--brand-hover)] disabled:opacity-60"
           disabled={busy}
           type="submit"
         >
@@ -90,7 +90,7 @@ export default function SignInPage() {
         </button>
       </form>
 
-      <p className="mt-3 text-xs text-zinc-500">
+      <p className="mt-3 text-caption text-[var(--text-dim)]">
         If `AUTH_RESEND_KEY` is not configured, OTP codes are logged in Convex function logs.
       </p>
     </div>

@@ -3,6 +3,25 @@ import { ulid } from "ulid";
 import { mutation, query } from "./_generated/server";
 import { requireIdentity } from "./lib/auth";
 
+export const listUsedMaterials = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await requireIdentity(ctx);
+    const ownerUserId = identity.subject;
+
+    const spools = await ctx.db
+      .query("spools")
+      .withIndex("by_owner", (q) => q.eq("ownerUserId", ownerUserId))
+      .collect();
+
+    const used = new Set<string>();
+    for (const spool of spools) {
+      if (spool.material?.trim()) used.add(spool.material.trim());
+    }
+    return [...used];
+  },
+});
+
 export const listSpools = query({
   args: {
     searchText: v.optional(v.string()),
@@ -97,6 +116,8 @@ export const createSpool = mutation({
     brand: v.string(),
     remainingGrams: v.number(),
     notes: v.optional(v.string()),
+    price: v.optional(v.number()),
+    datePurchased: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await requireIdentity(ctx);
@@ -123,6 +144,8 @@ export const createSpool = mutation({
       brand: args.brand,
       remainingGrams: args.remainingGrams,
       notes: args.notes,
+      price: args.price,
+      datePurchased: args.datePurchased,
       createdAt: now,
       updatedAt: now,
     });
@@ -140,6 +163,8 @@ export const updateSpool = mutation({
       brand: v.optional(v.string()),
       remainingGrams: v.optional(v.number()),
       notes: v.optional(v.string()),
+      price: v.optional(v.number()),
+      datePurchased: v.optional(v.number()),
     }),
   },
   handler: async (ctx, args) => {

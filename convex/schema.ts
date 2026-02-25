@@ -39,6 +39,8 @@ export default defineSchema({
     brand: v.string(),
     remainingGrams: v.number(),
     notes: v.optional(v.string()),
+    price: v.optional(v.number()),
+    datePurchased: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })

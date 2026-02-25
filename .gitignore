@@ -21,6 +21,7 @@
 /build
 
 # misc
+/bin
 .DS_Store
 *.pem
 .codex/

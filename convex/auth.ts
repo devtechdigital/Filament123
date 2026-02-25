@@ -1,6 +1,9 @@
+
 import { convexAuth } from "@convex-dev/auth/server";
 import { Email } from "@convex-dev/auth/providers/Email";
-import { randomInt } from "node:crypto";
+
+const otp6 = () =>
+  String(Math.floor(Math.random() * 1_000_000)).padStart(6, "0");
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
@@ -8,8 +11,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       id: "email",
       maxAge: 60 * 10,
       from: process.env.AUTH_EMAIL_FROM ?? "Filament.home <noreply@filament.home>",
-      generateVerificationToken: async () =>
-        String(randomInt(0, 1_000_000)).padStart(6, "0"),
+      generateVerificationToken: async () => otp6(),
       sendVerificationRequest: async ({ identifier, token }) => {
         const apiKey = process.env.AUTH_RESEND_KEY;
         const from = process.env.AUTH_EMAIL_FROM ?? "Filament.home <noreply@filament.home>";
