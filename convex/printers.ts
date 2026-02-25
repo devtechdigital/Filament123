@@ -1,3 +1,4 @@
+import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireIdentity } from "./lib/auth";
 
@@ -160,5 +161,41 @@ export const addAmsUnit = mutation({
     }
 
     return { amsUnitId, index: nextIndex };
+  },
+});
+
+export const deleteAmsUnit = mutation({
+  args: {
+    amsUnitId: v.id("amsUnits"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await requireIdentity(ctx);
+    const ownerUserId = identity.subject;
+
+    const amsUnit = await ctx.db.get(args.amsUnitId);
+    if (!amsUnit || amsUnit.ownerUserId !== ownerUserId) {
+      throw new Error("AMS unit not found");
+    }
+
+    const slots = await ctx.db
+      .query("amsSlots")
+      .withIndex("by_ams_unit", (q) => q.eq("amsUnitId", args.amsUnitId))
+      .collect();
+
+    for (const slot of slots) {
+      const assignment = await ctx.db
+        .query("slotAssignments")
+        .withIndex("by_owner_slot", (q) =>
+          q.eq("ownerUserId", ownerUserId).eq("slotId", slot._id),
+        )
+        .first();
+      if (assignment) {
+        await ctx.db.delete(assignment._id);
+      }
+      await ctx.db.delete(slot._id);
+    }
+
+    await ctx.db.delete(args.amsUnitId);
+    return { ok: true };
   },
 });
